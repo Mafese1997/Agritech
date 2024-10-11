@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Monitoring Dashboard</title>
+</head>
+<body>
+    <h1>Crop Monitoring Dashboard</h1>
+    <h2>Weather Forecast</h2>
+    <form id="weather-form">
+        <input type="text" id="location" placeholder="Enter location" required>
+        <button type="submit">Get Weather</button>
+    </form>
+    <div id="weather"></div>
+
+    <script>
+        document.getElementById('weather-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const location = document.getElementById('location').value;
+
+            fetch('/api/weather/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ location })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('weather').innerHTML = `
+                    <p>Temperature: ${data.temperature}°C</p>
+                    <p>Humidity: ${data.humidity}%</p>
+                    <p>Condition: ${data.weather_condition}</p>
+                `;
+            })
+            .catch(err => console.log(err));
+        });
+    </script>
+</body>
+</html>
